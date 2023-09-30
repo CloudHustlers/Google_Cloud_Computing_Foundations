@@ -5,7 +5,7 @@
 export USERNAME2=
 ```
 ```cmd
-export ZONE=
+export BUCKET_NAME=
 ```
 ```cmd
 export TOPIC_NAME=
