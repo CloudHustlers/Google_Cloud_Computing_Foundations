@@ -18,12 +18,10 @@ export REGION=${ZONE::-2}
 gcloud compute instances create $INSTANCE_NAME \
 --zone $ZONE \
 --machine-type e2-micro \
---network nucleus-vpc \
 --image-family debian-10 \
 --image-project debian-cloud
 gcloud container clusters create nucleus-backend \
 --num-nodes 1 \
---network nucleus-vpc \
 --zone $ZONE
 kubectl create deployment hello-server --image=gcr.io/google-samples/hello-app:2.0
 kubectl expose deployment hello-server \
@@ -38,7 +36,6 @@ sed -i -- 's/nginx/Google Cloud Platform - '"\$HOSTNAME"'/' /var/www/html/index.
 EOF
 gcloud compute instance-templates create web-server-template --region $REGION \
 --metadata-from-file startup-script=startup.sh \
---network nucleus-vpc \
 --machine-type e2-micro
 gcloud compute target-pools create nginx-pool --region=$REGION
 gcloud compute instance-groups managed create web-server-group --region $REGION \
@@ -46,8 +43,7 @@ gcloud compute instance-groups managed create web-server-group --region $REGION 
 --size 2 \
 --template web-server-template
 gcloud compute firewall-rules create $FIREWALL_NAME \
---allow tcp:80 \
---network nucleus-vpc
+--allow tcp:80
 gcloud compute http-health-checks create http-basic-check
 gcloud compute instance-groups managed \
 set-named-ports web-server-group \
